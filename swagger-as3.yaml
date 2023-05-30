@@ -1,0 +1,2212 @@
+openapi: 3.0.0
+info:
+  title: Polish API
+  description: Specyfikacja interfejsu dla usług świadczonych przez ASPSP w oparciu o
+    dostęp do rachunków płatniczych. Opracowane przez Związek Banków Polskich i
+    podmioty współpracujące / Interface specification for services provided by
+    ASPSP based on access to payment accounts. Prepared by the Polish Bank
+    Association and its affiliates
+  version: 2_1_1
+tags:
+  - name: AS
+    description: Serwis autoryzacyjny / Authorization Service
+paths:
+  /v2_1_1.5/auth/v2_1_1.5/login:
+    get:
+      operationId: login
+      responses:
+        "302":
+          description: ""
+          headers:
+            Location:
+              description: Redirect location
+              schema:
+                type: string
+      parameters:
+        - required: true
+          description: SessionId
+          in: query
+          name: sessionId
+          schema:
+            type: string
+  /v2_1_1.5/auth/v2_1_1.5/token:
+    post:
+      description: Requests OAuth2 access token value
+      tags:
+        - AS
+      operationId: token
+      responses:
+        "200":
+          description: Success
+          headers:
+            Content-Encoding:
+              description: Gzip, deflate
+              schema:
+                type: string
+            X-JWS-SIGNATURE:
+              description: Detached JWS signature of the body of the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "405":
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "406":
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "510":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      parameters:
+        - $ref: "#/components/parameters/acceptEncodingParam"
+        - $ref: "#/components/parameters/acceptLanguageParam"
+        - $ref: "#/components/parameters/acceptCharsetParam"
+        - $ref: "#/components/parameters/xjwsSignatureParam"
+        - $ref: "#/components/parameters/xRequestIdParam"
+        - $ref: "#/components/parameters/contentTypeParam"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TokenRequest"
+        description: Data for OAuth2 Access Token Request
+        required: true
+      summary: Requests OAuth2 access token value
+  /v2_1_1.5/auth/v2_1_1.5/authorize:
+    post:
+      description: Requests OAuth2 authorization code
+      tags:
+        - AS
+      operationId: authorize
+      responses:
+        "200":
+          description: Success
+          headers:
+            Content-Encoding:
+              description: Gzip, deflate
+              schema:
+                type: string
+            X-JWS-SIGNATURE:
+              description: Detached JWS signature of the body of the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthorizeResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "405":
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "406":
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "510":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      parameters:
+        - $ref: "#/components/parameters/acceptEncodingParam"
+        - $ref: "#/components/parameters/acceptLanguageParam"
+        - $ref: "#/components/parameters/acceptCharsetParam"
+        - $ref: "#/components/parameters/xjwsSignatureParam"
+        - $ref: "#/components/parameters/xRequestIdParam"
+        - $ref: "#/components/parameters/contentTypeParam"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthorizeRequest"
+        description: Data for OAuth2 Authorization Code Request
+        required: true
+      summary: Requests OAuth2 authorization code
+  /v2_1_1.5/auth/v2_1_1.5/cert:
+    get:
+      operationId: cert
+      responses:
+        "200":
+          description: Success
+          content:
+            application/pem-file:
+              schema:
+                title: response
+        "510":
+          description: Internal Server Error
+          content:
+            application/pem-file:
+              schema:
+                $ref: "#/components/schemas/Error"
+      parameters:
+        - required: true
+          in: header
+          name: apiConsumerId
+          schema:
+            type: string
+  /v2_1_1.5/auth/v2_1_1.5/register:
+    put:
+      operationId: PUT_v1-0-auth-v1-0-register
+      responses:
+        "200":
+          description: Success.
+        "400":
+          description: Error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "510":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      parameters:
+        - $ref: "#/components/parameters/acceptEncodingParam"
+        - $ref: "#/components/parameters/acceptLanguageParam"
+        - $ref: "#/components/parameters/acceptCharsetParam"
+        - $ref: "#/components/parameters/xRequestIdParam"
+        - $ref: "#/components/parameters/contentTypeParam"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientRequest"
+        required: true
+    post:
+      operationId: POST_v1-0-auth-v1-0-register
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterClientResponse"
+        "400":
+          description: Error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "510":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      parameters:
+        - $ref: "#/components/parameters/acceptEncodingParam"
+        - $ref: "#/components/parameters/acceptLanguageParam"
+        - $ref: "#/components/parameters/acceptCharsetParam"
+        - $ref: "#/components/parameters/xRequestIdParam"
+        - $ref: "#/components/parameters/contentTypeParam"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterClientRequest"
+        description: Data for client registration request.
+        required: true
+servers:
+  - url: https://apiHost/api
+components:
+  parameters:
+    contentTypeParam:
+      required: true
+      description: application/json
+      in: header
+      name: Content-Type
+      schema:
+        type: string
+        enum:
+          - application/json
+    authorizationParam:
+      required: true
+      description: The value of the Authorization header should consist of 'type' +
+        'credentials', where for the approach using the 'type' token should be
+        'Bearer'.
+      in: header
+      name: Authorization
+      schema:
+        type: string
+    acceptEncodingParam:
+      required: true
+      description: Gzip, deflate
+      in: header
+      name: Accept-Encoding
+      schema:
+        type: string
+        enum:
+          - gzip
+          - deflate
+          - gzip, deflate
+          - deflate, gzip
+    acceptLanguageParam:
+      required: true
+      description: Prefered language of response
+      in: header
+      name: Accept-Language
+      schema:
+        type: string
+    acceptCharsetParam:
+      required: true
+      description: UTF-8
+      in: header
+      name: Accept-Charset
+      schema:
+        type: string
+        enum:
+          - utf-8
+          - UTF-8
+    xjwsSignatureParam:
+      required: true
+      description: Detached JWS signature of the body of the payload
+      in: header
+      name: X-JWS-SIGNATURE
+      schema:
+        type: string
+    xRequestIdParam:
+      required: true
+      description: Identyfikator Ĺźądania w formacie UUID (Wariant 1, Wersja 1), zgodnym ze
+        standardem RFC 4122, nadawany przez TPP. Wartość musi być zgodna z
+        parametrem requestId przekazywanym w ciele kaĹźdego Ĺźądania. / Request
+        identifier using UUID format (Variant 1, Version 1), described in RFC
+        4122 standard, set by TPP. Value of this header must be the same as for
+        the requestId param passed inside request payload.
+      in: header
+      name: X-REQUEST-ID
+      schema:
+        type: string
+  schemas:
+    RegisterClientRequest:
+      description: Klasa zawierająca dane klienta API / Class with API Client data
+      properties:
+        software_statement:
+          $ref: "#/components/schemas/SoftwareStatement"
+      type: object
+    RegisterClientResponse:
+      description: ""
+      allOf:
+        - properties:
+            client_id:
+              description: Identyfikator klienta w wewnętrznym rejestrze klientów / Client
+                id in internal clients registry.
+              type: string
+              maxLength: 50
+            jwks:
+              type: string
+              description: Lista poprawnych callback uris uĹźywanych w odpowiedziach
+                asynchronicznych przez usługi biznesowe /  A list of valid call
+                back uris used in asynchronous responses by business services.
+          required:
+            - client_id
+            - jwks
+          type: object
+    UpdateClientRequest:
+      description: Klasa reprezentująca Ĺźądanie aktualizacji danych klienta / A class
+        representing a request for data update for the client.
+      properties:
+        software_statement:
+          $ref: "#/components/schemas/UpdatableSoftwareStatement"
+    SoftwareStatement:
+      properties:
+        iss:
+          type: string
+          description: Identyfikator wystawcy software_statement / software_statement
+            issuer ID
+        sub:
+          type: string
+          maxLength: 32
+          description: Identyfikator TPP / TPP ID
+        sub_name:
+          type: string
+          minLength: 5
+          maxLength: 50
+          description: Nazwa TPP / TPP name
+        sub_descr:
+          type: string
+          maxLength: 150
+          description: Opis TPP / TPP description
+        sub_org_number:
+          type: string
+          maxLength: 32
+          description: Numer identyfikacji podatkowej TPP / TPP TAX number
+        sub_country:
+          type: string
+          maxLength: 56
+          description: Kraj rejestracji TPP / TPP registration country
+        client_id:
+          description: Identyfikator klienta w wewnętrznym rejestrze klientów / Client id
+            in internal clients registry.
+          type: string
+          maxLength: 50
+        client_name:
+          type: string
+          minLength: 5
+          maxLength: 50
+          description: Nazwa aplikacji klienta / Customer application name
+        redirect_uris:
+          description: Lista poprawnych redirect uris uĹźywanych w procesie autoryzacji / A
+            list of valid redirect uris used in authorization processes.
+          type: array
+          items:
+            maxLength: 128
+            type: string
+            pattern: ^(?:https:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#\[\]@!\$'&\(\)\*\+,;=.]+$
+        scope:
+          type: string
+          description: Lista nazw zakresów uprawnień / List of roles
+        jwks:
+          $ref: "#/components/schemas/JWKS"
+        callback_uris:
+          maxLength: 265
+          description: Lista poprawnych callback uris uĹźywanych w odpowiedziach
+            asynchronicznych przez usługi biznesowe /  A list of valid call back
+            uris used in asynchronous responses by business services.
+          type: array
+          items:
+            type: string
+            pattern: ^(?:https:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#\[\]@!\$'&\(\)\*\+,;=.]+$
+        contacts:
+          description: Lista kontaktów po stronie TPP dla wszelkich kwestii dotyczących
+            uĹźywania API / A list of contacts points on TPP side for any issues
+            related to API usage.
+          minItems: 1
+          maxItems: 4
+          type: array
+          items:
+            $ref: "#/components/schemas/TPPContacts"
+      required:
+        - iss
+        - sub_org_number
+        - redirect_uris
+        - callback_uris
+        - contacts
+    UpdatableSoftwareStatement:
+      properties:
+        client_id:
+          description: Identyfikator klienta w wewnętrznym rejestrze klientów / Client id
+            in internal clients registry.
+          type: string
+          maxLength: 50
+      allOf:
+        - $ref: "#/components/schemas/SoftwareStatement"
+    JWKS:
+      description: Klasa reprezentująca JWKS zgodnie z RFC7517 /  A class representing JWKS
+        as specified in RFC7517.
+      properties:
+        keys:
+          type: array
+          maxItems: 10
+          minItems: 1
+          items:
+            type: object
+            properties:
+              x5u:
+                description: URI które kieruje do zasobu dla publicznego klucza certyfikatu
+                  X.509 zgodnie z RFC7517 / A URI that refers to a resource for
+                  an X.509 public key certificate as specified in RFC7517.
+                type: string
+                pattern: ^(?:https:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#\[\]@!\$'&\(\)\*\+,;=.]+$
+            required:
+              - x5u
+      required:
+        - keys
+      type: object
+    AuthorizeRequest:
+      xml:
+        name: AuthorizeRequest
+      description: Klasa zapytania o uzyskanie kodu autoryzacyjnego zgodnego z OAuth2 /
+        Request class for authorization code in accordance with OAuth2
+      properties:
+        requestHeader:
+          $ref: "#/components/schemas/RequestHeaderWithoutTokenAS"
+        response_type:
+          description: "Typ odpowiedzi. Wartość stała: code / Type of answer. Constant
+            value: code"
+          type: string
+        client_id:
+          description: Identyfikator TPP / TPP ID
+          type: string
+          maxLength: 50
+        redirect_uri:
+          description: Adres usługi TPP, na które zostanie wykonane przekierowanie po
+            uwierzytelnieniu klienta ASPSP / TPP service address, to which the
+            request will be redirected after ASPSP client authorization
+          type: string
+          maxLength: 128
+        scope:
+          description: Typy zgód o które prosi TPP. Lista identyfikatorów zgodna ze
+            specyfikacją standardu Polish API / Types of authorizations TPP
+            requests. Id list in accordance with Polish API standard
+            specification.
+          type: string
+          maxLength: 16
+        scope_details:
+          $ref: "#/components/schemas/ScopeDetailsInput"
+        state:
+          description: "Losowa, unikalna w ramach TPP wartość â zabezpieczenie przed
+            atakiem Cross-Site Request Forgery / Random, unique TPP value -
+            secures against Cross-Site Request Forgery attack"
+          type: string
+          maxLength: 128
+      required:
+        - requestHeader
+        - response_type
+        - client_id
+        - redirect_uri
+        - scope
+        - scope_details
+        - state
+      type: object
+    AuthorizeResponse:
+      xml:
+        name: AuthorizeResponse
+      description: Klasa odpowiedzi na zapytanie TPP o autoryzację PSU do wykonania usługi
+        interfejsu XS2A / Response class to TPP request for PSU authorization
+        for XS2A interface service execution
+      properties:
+        responseHeader:
+          $ref: "#/components/schemas/ResponseHeader"
+        aspspRedirectUri:
+          description: Adres po stronie ASPSP, na który TPP powinien dokonać przekierowania
+            przeglądarki PSU w celu jego uwierzytelnienia / ASPSP side address,
+            to which TPP should redirect PSU browser in order to authorize
+          type: string
+      required:
+        - responseHeader
+        - aspspRedirectUri
+      type: object
+    Error:
+      description: Klasa zawierająca informacje o zwracanym błędzie / Error class
+      properties:
+        responseHeader:
+          $ref: "#/components/schemas/ResponseHeader"
+        code:
+          description: Kod błędu / Error code
+          type: string
+        message:
+          description: Opis błędu / Error message
+          type: string
+      type: object
+    EatCodeRequest:
+      xml:
+        name: EatCodeRequest
+      description: Klasa zapytania o uzyskanie kodu autoryzacyjnego zgodnego z OAuth2 na
+        podstawie przekazanego kodu jednorazowego, wygenerowanego w EAT /
+        Request class for OAuth2 authorization code, based on one-time code
+        generated in EAT
+      properties:
+        requestHeader:
+          $ref: "#/components/schemas/RequestHeaderWithoutTokenCallbackAS"
+        response_type:
+          description: "Typ odpowiedzi. Wartość stała: code / Type of answer. Constant
+            value: code"
+          type: string
+        eatCode:
+          description: Jednorazowy kod autoryzacyjny wygenerowany przez EAT / One-time
+            authorization code generated by EAT
+          type: string
+        eatType:
+          $ref: "#/components/schemas/DictionaryItem"
+        client_id:
+          description: Identyfikator TPP / TPP ID
+          type: string
+          maxLength: 50
+        scope:
+          description: Typy zgód o które prosi TPP. Lista identyfikatorów zgodna ze
+            specyfikacją standardu Polish API. / Types of consents requested by
+            TPP. ID list in accordance with Polish API specification standard.
+          type: string
+          maxLength: 16
+        scope_details:
+          $ref: "#/components/schemas/ScopeDetailsInput"
+        state:
+          description: "Losowa, unikalna w ramach TPP wartość â zabezpieczenie przed
+            atakiem Cross-Site Request Forgery / Random, unique TPP value -
+            secures against Cross-Site Request Forgery attack"
+          type: string
+          maxLength: 128
+      required:
+        - requestHeader
+        - response_type
+        - eatCode
+        - client_id
+        - scope
+        - scope_details
+      type: object
+    TokenRequest:
+      xml:
+        name: TokenRequest
+      description: Klasa zapytania o uzyskanie tokena dostępowego zgodnego z OAuth2 /
+        Request class for access token in accordance with OAuth2
+      properties:
+        requestHeader:
+          $ref: "#/components/schemas/RequestHeaderWithoutTokenAS"
+        grant_type:
+          description: "Typ zastosowanej autoryzacji. Jedna z wartości: authorization_code,
+            refresh_token, exchange_token (rozszerzenie standardu OAuth2) / Type
+            of authorization used. One of the values: authorization_code,
+            refresh_token, exchange_token (OAuth2 standard extension) "
+          type: string
+        Code:
+          description: Kod autoryzacji uzyskany podczas Ĺźądania do usługi /authorize
+            OAuth2. Wymagany dla grant_type=authorization_code. / Authorization
+            code received during OAuth2 service /authorize request. Required for
+            grant_type=authorization_code.
+          type: string
+        redirect_uri:
+          description: Adres usługi TPP, na które zostanie wykonane przekierowanie po
+            wygenerowaniu tokena dostępowego przez ASPSP. Wymagany dla
+            grant_type=authorization_code. / TPP service address, to which the
+            redirection will be made after generationg access token by ASPSP.
+            Required for grant_type=authorization_code.
+          type: string
+          maxLength: 128
+        client_id:
+          description: Identyfikator TPP. / TPP ID.
+          type: string
+          maxLength: 50
+        refresh_token:
+          description: Wartość tokena, który słuĹźy do uzyskania nowego tokena dostępowego
+            dla tego samego zakresu zgód (scope, scope_details) - w przypadku
+            gdy pierwotny token utraci swoją waĹźność, lub dla zawęĹźonego
+            zakresu zgód. Wymagany dla grant_type=refresh_token. / Token value,
+            which is used to receive a new access token for the same consent
+            scope (scope, scope_details) - in case the former is inactive, or
+            for a narrower consent scope. Required for grant_type=refresh_token
+          type: string
+          maxLength: 256
+        exchange_token:
+          description: Wartość tokena, który słuĹźy do uzyskania nowego tokena dostępowego
+            dla innego zakresu zgód (scope, scope_details). Wartością tego
+            parametru powinien być token dostępowy waĹźnej sesji komuikacyjnej z
+            interfejsem XS2A. Wymagany dla grant_type=exchange_token./ Token
+            value, which is used to receive a new access token for a different
+            consent scope (scope, scope_details). The value of this parameter
+            should be access token of active XS2A interface communication
+            session. Required for grant_type=exchange_token
+          type: string
+          maxLength: 256
+        scope:
+          description: Typy zgód o które prosi TPP. Lista identyfikatorów zgodna ze
+            specyfikacją standardu Polish API. Wymagany dla
+            grant_type=exchange_token. / Types of consent requested by TPP. List
+            of IDs in accordance with Polish API specification standard.
+            Required for grant_type=exchange_token
+          type: string
+          maxLength: 16
+        scope_details:
+          $ref: "#/components/schemas/ScopeDetailsInput"
+        is_user_session:
+          description: "Określa czy dana sesja jest związana z interakcją z PSU â
+            wartości true/false. Rozszerzenie standardu OAuth2. / Determines if
+            a given session is associated with PSU interaction - values true /
+            false"
+          type: boolean
+        user_ip:
+          description: IP przeglądarki uĹźytkownika (informacja na potrzeby fraud
+            detection). Rozszerzenie standardu OAuth2. Wymagany dla
+            is_user_session = true. / Browser IP (info for fraud detection).
+            Extension of the OAuth2 standard. Required for is_user_session=true
+          type: string
+          maxLength: 39
+        user_agent:
+          description: Informacja dotycząca wersji przeglądarki uĹźytkownika (informacja na
+            potrzeby fraud detection). Rozszerzenie standardu OAuth2. Wymagany
+            dla is_user_session = true. / User browser version information (info
+            for fraud detection). Extension of OAuth2 standard. Required for
+            is_user_session=true
+          type: string
+      required:
+        - grant_type
+        - client_id
+      type: object
+    TokenResponse:
+      description: Klasa odpowiedzi na zapytanie TPP o wygenerowanie tokena dostępowego. /
+        Tpp request response class to generate access token.
+      properties:
+        responseHeader:
+          $ref: "#/components/schemas/ResponseHeader"
+        access_token:
+          description: Wartość wygenerowanego tokena dostępowego. / Value of the generated
+            access token
+          type: string
+        token_type:
+          description: Typ tokena dostępowego. Dozwolona wartość to Bearer. / Type of
+            access token. Allowed value is Bearer.
+          type: string
+        expires_in:
+          description: "Czas waĹźności tokena dostępowego, po którym zostanie on
+            uniewaĹźniony. Wartość wyraĹźona w sekundach, od momentu
+            wygenerowania odpowiedzi. / "
+          type: string
+        refresh_token:
+          description: Wartość wygenerowanego tokena słuĹźącego do uzyskania nowego tokena
+            dostępowego bez konieczności ponownej autoryzacji. / Value of the
+            generated token used to get a new token without necessity to
+            authorize again.
+          type: string
+          maxLength: 256
+        scope:
+          description: Typy zgód które uzyskał TPP. Lista identyfikatorów zgodna ze
+            specyfikacją standardu Polish API. / Types of consents granted to
+            TPP. List of IDs in accordance with Polish API specification
+            standard.
+          type: string
+          maxLength: 16
+        scope_details:
+          $ref: "#/components/schemas/ScopeDetailsOutput"
+      required:
+        - responseHeader
+        - access_token
+        - token_type
+        - expires_in
+        - scope_details
+      type: object
+    RequestHeaderWithoutTokenAS:
+      description: ""
+      allOf:
+        - $ref: "#/components/schemas/RequestHeaderWithoutToken"
+        - properties:
+            isCompanyContext:
+              description: (true / false) Znacznik oznaczający czy Ĺźądanie jest wysyłane w
+                kontekście PSU korporacyjnego / Value describing whether the
+                request is sent in the corporate PSU context.
+              type: boolean
+            psuIdentifierType:
+              description: Typ identyfikatora PSU, słuĹźy do wskazania przez TPP na
+                podstawie jakiej informacji zostanie zidentyfikowany PSU, który
+                będzie podlegał uwierzytelnieniu. Wartość słownikowa. / PSU
+                identifier type, used by TPP to indicate type of information
+                based on which the PSU is to be authenticated. Dictionary value.
+              type: string
+              maxLength: 256
+            psuIdentifierValue:
+              description: Wartość identyfikatora PSU. Wymagany warunkowo - w przypadku gdy
+                została przekazana niepusta wartość typu identyfikatora PSU. /
+                The value of the PSU's identifier. Required conditionally - in
+                case non empty value of PSU identifier type was passed.
+              type: string
+              maxLength: 255
+            psuContextIdentifierType:
+              description: Pole nieobsługiwane, PSU podczas wykonywania SCA ma moĹźliwość
+                wyboru w jakim kontekście będzie pracował. / Field not
+                supported. PSU during the execution of SCA has the possibility
+                to choose the context.
+              type: string
+            psuContextIdentifierValue:
+              description: Pole nieobsługiwane, PSU podczas wykonywania SCA ma moĹźliwość
+                wyboru w jakim kontekście będzie pracował. / Field not
+                supported. PSU during the execution of SCA has the possibility
+                to choose the context.
+              type: string
+          type: object
+    ScopeDetailsInput:
+      description: Zakres, limity, parametry i czas waĹźności zgód, o które prosi TPP. /
+        Scope, limits, parameters and expiration time of consents requested by
+        TPP
+      properties:
+        privilegeList:
+          description: Lista struktur opisujących szczegóły zgody. Wymagana warunkowo - w
+            przypadku procesu uzyskania nowej zgody. / The list of structures
+            describing details of consent. Conditionally required - in case of
+            process of obtaining new consent.
+          type: array
+          items:
+            $ref: "#/components/schemas/ScopeDetailsInputPrivilegeList"
+        scopeGroupType:
+          description: Rodzaj zgody / Type of consent
+          enum:
+            - ais-accounts
+            - ais
+            - pis
+          type: string
+        consentId:
+          description: Identyfikator zgody / Id of consent
+          type: string
+          maxLength: 64
+        scopeTimeLimit:
+          format: date-time
+          description: Data waĹźności zgody / Consent valid until,
+            YYYY-MM-DDThh:mm:ss[.mmm]Z
+          type: string
+        throttlingPolicy:
+          description: Throttling policy
+          enum:
+            - psd2Regulatory
+          type: string
+      required:
+        - scopeGroupType
+        - consentId
+        - scopeTimeLimit
+        - throttlingPolicy
+      type: object
+    ScopeDetailsOutput:
+      description: Zakres, limity, parametry i czas waĹźności zgód, które potwierdza ASPSP
+        / Scope, limits, parameters and expiration time of consents that are
+        confimed by ASPSP
+      properties:
+        privilegeList:
+          description: Lista struktur opisujących szczegóły zgody uzyskanej przez TPP. /
+            The list of structures describing details of consent obtained by
+            TPP.
+          type: array
+          items:
+            $ref: "#/components/schemas/ScopeDetailsOutputPrivilegeList"
+        consentId:
+          description: Identyfikator zgody / Id of consent
+          type: string
+          maxLength: 64
+        scopeGroupType:
+          description: Rodzaj zgody / Type of consent
+          enum:
+            - ais-accounts
+            - ais
+            - pis
+          type: string
+        scopeTimeLimit:
+          format: date-time
+          description: Data waĹźności zgody / consent valid until,
+            YYYY-MM-DDThh:mm:ss[.mmm]Z
+          type: string
+        throttlingPolicy:
+          description: Throttling policy
+          enum:
+            - psd2Regulatory
+          type: string
+      required:
+        - consentId
+        - scopeTimeLimit
+        - throttlingPolicy
+      type: object
+    ResponseHeader:
+      description: Klasa zawierająca zwrotne metadane / Metadata Class
+      properties:
+        requestId:
+          description: Identyfikator Ĺźądania otrzymanego od TPP / Identifier of request
+            received from TPP
+          type: string
+        sendDate:
+          format: date-time
+          description: "Data odpowiedzi, format: YYYY-MM-DDThh:mm:ss[.mmm]Z / Send date"
+          type: string
+        isCallback:
+          description: "Znacznik określający czy odpowiedz zostanie przekazana w formie
+            wywołania zwrotnego. true - gdy odpowiedz w formie wywołania
+            zwrotnego. Inna dopuszczalna wartość to false. / Describes whether
+            the response will be delivered as callback. true - callback. Other
+            allowed value: false."
+          type: boolean
+      type: object
+    RequestHeaderWithoutTokenCallbackAS:
+      description: ""
+      allOf:
+        - $ref: "#/components/schemas/RequestHeaderWithoutTokenAS"
+        - properties:
+            callbackURL:
+              description: Adres funkcji zwrotnej / callback URL
+              type: string
+              maxLength: 255
+            apiKey:
+              description: API key dla wywołania funkcji zwrotnej / callback API key
+              type: string
+              maxLength: 255
+          type: object
+    DictionaryItem:
+      description: Klasa zawierająca dane elementu/pozycji słownika / Dictionary Item Class
+      properties:
+        code:
+          description: Kod pozycji słownika / Code
+          type: string
+        description:
+          description: Opis pozycji słownika / Description
+          type: string
+      type: object
+    RequestHeaderWithoutToken:
+      description: Klasa zawierająca informacje o PSU / PSU Information Class
+      properties:
+        requestId:
+          description: Identyfikator Ĺźądania w formacie UUID (Wariant 1, Wersja 1) zgodnym
+            ze standardem RFC 4122 / Request ID using UUID format (Variant 1,
+            Version 1) described in RFC 4122 standard
+          type: string
+          format: uuid
+        userAgent:
+          description: Browser agent dla PSU / PSU browser agent
+          type: string
+          maxLength: 255
+        ipAddress:
+          description: Adres IP końcowego urządzenia PSU. Wymagany dla isDirectPsu=true. /
+            IP address of PSU's terminal device. Required when isDirectPsu=true.
+          type: string
+          maxLength: 39
+        sendDate:
+          format: date-time
+          description: "Oryginalna data wysłania, format: YYYY-MM-DDThh:mm:ss[.mmm]Z / Send
+            date"
+          type: string
+        tppId:
+          description: Identyfikator TPP / TPP ID
+          type: string
+          maxLength: 127
+      required:
+        - requestId
+      type: object
+    ScopeDetailsInputPrivilegeList:
+      description: Pełna lista uprawnień będących przedmiotem zapytania o zgodę PSU / The
+        list of all privileges that are the subject of the request for PSU's
+        consent
+      properties:
+        accountNumber:
+          $ref: "#/components/schemas/AccountNumber"
+        ais-accounts:getAccounts:
+          $ref: "#/components/schemas/PrivilegeAisAspspInSimple"
+        ais:getAccount:
+          $ref: "#/components/schemas/PrivilegeAisAspspInSimple"
+        ais:getHolds:
+          $ref: "#/components/schemas/PrivilegeAisAspspIn"
+        ais:getTransactionsDone:
+          $ref: "#/components/schemas/PrivilegeAisAspspIn"
+        ais:getTransactionsPending:
+          $ref: "#/components/schemas/PrivilegeAisAspspIn"
+        ais:getTransactionsRejected:
+          $ref: "#/components/schemas/PrivilegeAisAspspIn"
+        ais:getTransactionsCancelled:
+          $ref: "#/components/schemas/PrivilegeAisAspspIn"
+        ais:getTransactionsScheduled:
+          $ref: "#/components/schemas/PrivilegeAisAspspIn"
+        ais:getTransactionDetail:
+          $ref: "#/components/schemas/PrivilegeAisAspspInSimple"
+        pis:getPayment:
+          $ref: "#/components/schemas/PrivilegePayment"
+        pis:getBundle:
+          $ref: "#/components/schemas/PrivilegeBundle"
+        pis:domestic:
+          $ref: "#/components/schemas/PrivilegeDomesticTransfer"
+        pis:EEA:
+          $ref: "#/components/schemas/PrivilegeForeignTransferEEA"
+        pis:nonEEA:
+          $ref: "#/components/schemas/PrivilegeForeignTransferNonEEA"
+        pis:tax:
+          $ref: "#/components/schemas/PrivilegeTaxTransfer"
+        pis:cancelPayment:
+          $ref: "#/components/schemas/PrivilegeCancelPayment"
+        pis:bundle:
+          $ref: "#/components/schemas/PrivilegeBundleTransfers"
+        pis:recurring:
+          $ref: "#/components/schemas/PrivilegeRecurringPayment"
+        pis:getRecurringPayment:
+          $ref: "#/components/schemas/PrivilegeRecurringPaymentStatus"
+        pis:cancelRecurringPayment:
+          $ref: "#/components/schemas/PrivilegeCancelRecurringPayment"
+      type: object
+    ScopeDetailsOutputPrivilegeList:
+      description: Pełna lista uprawnień, dla których została wyraĹźona zgoda przez PSU /
+        The list of all privileges that the PSU's consent has been confirmed
+      example:
+        ais:getTransactionsDone:
+          scopeUsageLimit: single
+          maxAllowedHistoryLong: 880
+        ais:getHolds:
+          scopeUsageLimit: single
+          maxAllowedHistoryLong: 880
+        ais:getTransactionsRejected:
+          scopeUsageLimit: single
+          maxAllowedHistoryLong: 880
+        ais:getTransactionsCancelled:
+          scopeUsageLimit: single
+          maxAllowedHistoryLong: 880
+        ais:getTransactionsScheduled:
+          scopeUsageLimit: single
+          maxAllowedHistoryLong: 880
+        ais-accounts:getAccounts:
+          scopeUsageLimit: single
+        pis:getPayment:
+          scopeUsageLimit: single
+        ais:getTransactionDetail:
+          scopeUsageLimit: single
+        ais:getTransactionsPending:
+          scopeUsageLimit: single
+          maxAllowedHistoryLong: 880
+        pis:cancelPayment:
+          scopeUsageLimit: single
+          paymentId: ""
+          bundleId: ""
+        pis:bundle:
+          scopeUsageLimit: single
+      properties:
+        accountNumber:
+          $ref: "#/components/schemas/AccountNumber"
+        ais-accounts:getAccounts:
+          $ref: "#/components/schemas/PrivilegeAisAspspOutSimple"
+        ais:getAccount:
+          $ref: "#/components/schemas/PrivilegeAisAspspOutSimple"
+        ais:getHolds:
+          $ref: "#/components/schemas/PrivilegeAisAspspOut"
+        ais:getTransactionsDone:
+          $ref: "#/components/schemas/PrivilegeAisAspspOut"
+        ais:getTransactionsPending:
+          $ref: "#/components/schemas/PrivilegeAisAspspOut"
+        ais:getTransactionsRejected:
+          $ref: "#/components/schemas/PrivilegeAisAspspOut"
+        ais:getTransactionsCancelled:
+          $ref: "#/components/schemas/PrivilegeAisAspspOut"
+        ais:getTransactionsScheduled:
+          $ref: "#/components/schemas/PrivilegeAisAspspOut"
+        ais:getTransactionDetail:
+          $ref: "#/components/schemas/PrivilegeAisAspspOutSimple"
+        pis:getPayment:
+          $ref: "#/components/schemas/PrivilegePayment"
+        pis:getBundle:
+          $ref: "#/components/schemas/PrivilegeBundle"
+        pis:domestic:
+          $ref: "#/components/schemas/PrivilegeDomesticTransfer"
+        pis:EEA:
+          $ref: "#/components/schemas/PrivilegeForeignTransferEEA"
+        pis:nonEEA:
+          $ref: "#/components/schemas/PrivilegeForeignTransferNonEEA"
+        pis:tax:
+          $ref: "#/components/schemas/PrivilegeTaxTransfer"
+        pis:cancelPayment:
+          $ref: "#/components/schemas/PrivilegeCancelPayment"
+        pis:bundle:
+          $ref: "#/components/schemas/PrivilegeBundleTransfers"
+        pis:recurring:
+          $ref: "#/components/schemas/PrivilegeRecurringPayment"
+        pis:getRecurringPayment:
+          $ref: "#/components/schemas/PrivilegeRecurringPaymentStatus"
+        pis:cancelRecurringPayment:
+          $ref: "#/components/schemas/PrivilegeCancelRecurringPayment"
+      type: object
+    AccountNumber:
+      maxLength: 34
+      description: Numer konta
+      type: string
+    PrivilegeAisAspspInSimple:
+      description: Lista atrybutów uprawnienia usługi AIS będących przedmiotem zapytania o
+        zgodę PSU / The list of attributes of the privilege of the AIS service
+        that are the subject of the request for PSU's consent
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+      type: object
+    PrivilegeAisAspspIn:
+      description: Lista atrybutów uprawnienia usługi AIS będących przedmiotem zapytania o
+        zgodę PSU / The list of attributes of the privilege of the AIS service
+        that are the subject of the request for PSU's consent
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        maxAllowedHistoryLong:
+          minimum: 1
+          maximum: 1460
+          description: Ilość dni wstecz, liczona od momentu wysłania przez TPP Ĺźądania o
+            pobranie historii transakcji rachunku płatnicznego, jaką moĹźe
+            obejmować odpowiedĹş na to Ĺźądanie / How much account's transaction
+            history is allowed to retrieve in days. This value should be used
+            for calculation based on date of sending the request.
+          type: integer
+      required:
+        - maxAllowedHistoryLong
+      type: object
+    PrivilegeAisAspspOutSimple:
+      description: Lista atrybutów uprawnienia usługi AIS dla których została wyraĹźona
+        zgoda przez PSU / The list of attributes of the privilege of the AIS
+        service that the PSU's consent has been confirmed
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+      type: object
+    PrivilegeAisAspspOut:
+      description: Lista atrybutów uprawnienia usługi AIS dla których została wyraĹźona
+        zgoda przez PSU / The list of attributes of the privilege of the AIS
+        service that the PSU's consent has been confirmed
+      example:
+        scopeUsageLimit: single
+        maxAllowedHistoryLong: 880
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        maxAllowedHistoryLong:
+          minimum: 1
+          maximum: 1460
+          description: Ilość dni wstecz, liczona od momentu wysłania przez TPP Ĺźądania o
+            pobranie historii transakcji rachunku płatnicznego, jaką moĹźe
+            obejmować odpowiedĹş na to Ĺźądanie / How much account's transaction
+            history is allowed to retrieve in days. This value should be used
+            for calculation based on date of sending the request.
+          type: integer
+      required:
+        - maxAllowedHistoryLong
+      type: object
+    PrivilegePayment:
+      description: Lista atrybutów uprawnienia do Ĺźądania statusu płatności / The list of
+        attributes of the payment status request privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        paymentId:
+          description: Identyfikator płatności / Payment ID
+          type: string
+        tppTransactionId:
+          description: Identyfikator transakcji nadany przez TPP. / Identifier of
+            transaction established by TPP.
+          type: string
+          maxLength: 64
+      type: object
+    PrivilegeBundle:
+      description: Lista atrybutów uprawnienia do Ĺźądania statusu paczki płatności / The
+        list of attributes of the bundle of payments status request privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        bundleId:
+          description: Identyfikator paczki płatności / Bundle of payments ID
+          type: string
+          maxLength: 64
+        tppBundleId:
+          description: Identyfikator paczki przelewów nadany przez TPP. / Bundle of
+            payments identifier set by TPP.
+          type: string
+      type: object
+    PrivilegeRecurringPaymentStatus:
+      description: Lista atrybutów uprawnienia do Ĺźądania statusu płatności cyklicznej /
+        The list of attributes of recurring payment status request privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        recurringPaymentId:
+          description: Identyfikator płatności cyklicznej nadany przez APSP / Recurring
+            payment identifier set by ASPSP
+          type: string
+        tppRecurringPaymentId:
+          description: Identyfikator płatności cyklicznej nadany przez TPP / Recurring
+            payment identifier set by TPP
+          type: string
+      type: object
+    PrivilegeDomesticTransfer:
+      description: Lista atrybutów uprawnienia do inicjacji przelewu zwykłego / The list of
+        attributes of the domestic transfer request initiation privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        recipient:
+          $ref: "#/components/schemas/RecipientPIS"
+        sender:
+          $ref: "#/components/schemas/SenderPISDomestic"
+        transferData:
+          $ref: "#/components/schemas/TransferData"
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Elixir
+            - ExpressElixir
+            - Sorbnet
+            - BlueCash
+            - Internal
+          type: string
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    PrivilegeForeignTransferEEA:
+      description: Lista atrybutów uprawnienia do inicjacji przelewu zagranicznego EEA /
+        The list of attributes of the EEA foreign transfer request initiation
+        privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        recipient:
+          $ref: "#/components/schemas/RecipientPISForeign"
+        sender:
+          $ref: "#/components/schemas/SenderPISForeign"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequired"
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+            - UrgentD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - SEPA
+            - InstantSEPA
+            - Target
+            - Swift
+            - SantanderOnePayFX
+          type: string
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    PrivilegeForeignTransferNonEEA:
+      description: Lista atrybutów uprawnienia do inicjacji przelewu zagranicznego bez EEA
+        / The list of attributes of the non-EEA foreign transfer request
+        initiation privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        recipient:
+          $ref: "#/components/schemas/RecipientPISForeign"
+        recipientBank:
+          $ref: "#/components/schemas/Bank"
+        sender:
+          $ref: "#/components/schemas/SenderPISForeign"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequired"
+        transferCharges:
+          maxLength: 3
+          description: Klauzula kosztowa / The cost clause
+          type: string
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - UrgentD1
+            - StandardD2
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Swift
+            - SEPA
+            - Target
+            - SantanderOnePayFX
+          type: string
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    PrivilegeTaxTransfer:
+      description: Lista atrybutów uprawnienia do inicjacji przelewu urzędu podatkowego /
+        The list of attributes of the tax transfer request initiation privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        recipient:
+          $ref: "#/components/schemas/RecipientPISTax"
+        sender:
+          $ref: "#/components/schemas/SenderPISDomestic"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequiredTax"
+        usInfo:
+          $ref: "#/components/schemas/TransactionInfoTax"
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Elixir
+            - ExpressElixir
+          type: string
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    PrivilegeCancelPayment:
+      description: Lista atrybutów uprawnienia do odwołania zainicjowanego przelewu / The
+        list of attributes of the cancel initiated payment request privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        paymentId:
+          maxLength: 64
+          description: Identyfikator płatności / Payment ID
+          type: string
+        bundleId:
+          description: Identyfikator paczki przelewów / Bundle of payments ID
+          type: string
+          maxLength: 64
+      type: object
+    PrivilegeCancelRecurringPayment:
+      description: Lista atrybutów uprawnienia do anulowania płatności cyklicznej / The
+        list of attributes of the cancel recurring payment request privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        recurringPaymentId:
+          maxLength: 64
+          description: Identyfikator płatności cyklicznej nadany przez ASPSP / Recurring
+            payment identifier set by ASPSP
+          type: string
+      type: object
+    PrivilegeBundleTransfers:
+      description: Lista atrybutów uprawnienia do zainicjowania paczki przelewu / The list
+        of attributes of the initiate bundle of payments request privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        transfersTotalAmount:
+          pattern: ^(0|([1-9][0-9]{0,}))\.\d{2}$
+          description: Łączna kwota wszystkich przelewów z paczki / The total amount of all
+            transfers from bundle
+          type: string
+          maxLength: 35
+        typeOfTransfers:
+          description: Typ przelewów, które zostaną zlecone w ramach paczki / The type of
+            transfers that will be initiated through the bundle
+          enum:
+            - domestic
+            - EEA
+            - nonEEA
+            - tax
+          type: string
+        domesticTransfers:
+          description: Lista struktur danych przelewów zwykłych, które zostaną zlecone.
+            Wymagane gdy typeOfTransfers = domestic. / The list of data
+            structures of domestic transfers to be initiated. Required when
+            typeOfTransfers = domestic.
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentDomesticRequestBundled"
+        EEATransfers:
+          description: Lista struktur danych przelewów zagranicznych SEPA, które zostaną
+            zlecone. Wymagane gdy typeOfTransfers = EEA. / The list of data
+            structures of SEPA foreign transfers to be initiated. Required when
+            typeOfTransfers = EEA.
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentEEARequestBundled"
+        nonEEATransfers:
+          description: Lista struktur danych przelewów zagranicznych innych niĹź SEPA,
+            które zostaną zlecone. Wymagane gdy typeOfTransfers = nonEEA. / The
+            list of data structures of non SEPA foreign transfers to be
+            initiated. Required when typeOfTransfers = nonEEA.
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentNonEEARequestBundled"
+        taxTransfers:
+          description: Lista struktur danych przelewów do urzędu podatkowego, które zostaną
+            zlecone. Wymagane gdy typeOfTransfers = tax. / The list of data
+            structures of tax transfers to be initiated. Required when
+            typeOfTransfers = tax.
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentTaxRequestBundled"
+      type: object
+    PrivilegeRecurringPayment:
+      description: Lista atrybutów uprawnienia do zdefiniowania nowej płatności cyklicznej
+        / The list of attributes of definition of new recurring payment request
+        privilege
+      properties:
+        scopeUsageLimit:
+          description: Rodzaj limitu zgody / Type of limit of usages
+          enum:
+            - single
+            - multiple
+          type: string
+        recurrence:
+          $ref: "#/components/schemas/RecurringTransferParameters"
+        typeOfPayment:
+          description: Typ przelewu, który zostanie wykorzystany do zdefiniowania nowej
+            płatności cyklicznej  / The type of payment that is to be used to
+            define new recurring payment
+          enum:
+            - domestic
+          type: string
+        domesticPayment:
+          $ref: "#/components/schemas/RecurringDomesticPayment"
+        EEAPayment:
+          $ref: "#/components/schemas/RecurringEEAPayment"
+        nonEEAPayment:
+          $ref: "#/components/schemas/RecurringNonEEAPayment"
+        taxPayment:
+          $ref: "#/components/schemas/RecurringTaxPayment"
+      type: object
+    RecipientPIS:
+      description: Klasa zawierająca dane odbiorcy uĹźywana w Ĺźądaniach PIS / PIS
+        Recipient Data Class
+      properties:
+        accountNumber:
+          $ref: "#/components/schemas/AccountNumber"
+        nameAddress:
+          $ref: "#/components/schemas/NameAddress"
+      required:
+        - accountNumber
+        - nameAddress
+      type: object
+    RecipientPISTax:
+      description: Klasa zawierająca dane odbiorcy uĹźywana w Ĺźądaniach PIS dla operacji
+        podatkowych / PIS Tax Recipient Data Class
+      properties:
+        accountNumber:
+          $ref: "#/components/schemas/AccountNumber"
+        nameAddress:
+          $ref: "#/components/schemas/NameAddress"
+      required:
+        - accountNumber
+        - nameAddress
+      type: object
+    RecipientPISForeign:
+      description: Klasa zawierająca dane odbiorcy uĹźywana w Ĺźądaniach PIS dla operacji
+        zagranicznych / PIS foreign Recipient Data Class
+      properties:
+        accountNumber:
+          $ref: "#/components/schemas/AccountForeign"
+        nameAddress:
+          $ref: "#/components/schemas/NameAddress"
+      required:
+        - accountNumber
+        - nameAddress
+      type: object
+    SenderPISForeign:
+      description: Klasa zawierająca dane nadawcy przelewu zagranicznego uĹźywana w
+        Ĺźądaniach PIS / Foreign PIS services Sender Data Class
+      properties:
+        accountNumber:
+          $ref: "#/components/schemas/AccountNumber"
+        nameAddress:
+          $ref: "#/components/schemas/NameAddress"
+      type: object
+    SenderPISDomestic:
+      description: Klasa zawierająca dane nadawcy przelewu krajowego uĹźywana w Ĺźądaniach
+        PIS / Domestic PIS services Sender Data Class
+      properties:
+        accountNumber:
+          $ref: "#/components/schemas/AccountNumber"
+        nameAddress:
+          $ref: "#/components/schemas/NameAddress"
+      type: object
+    TransferDataCurrencyRequiredTax:
+      properties:
+        currency:
+          maxLength: 3
+          description: Waluta, wymagana wartość PLN / Currency - PLN value required
+          type: string
+        amount:
+          pattern: ^(0|([1-9][0-9]{0,}))\.\d{2}$
+          description: Kwota przelewu / Amount
+          type: string
+          maxLength: 35
+        executionDate:
+          description: "Data wykonania przelewu. Wymagany pod warunkiem przekazania
+            wartości FutureDated w atrybucie executionMode. Format: YYYY-MM-DD /
+            Date when the transfer is to be executed (YYYY-MM-DD). Required
+            conditionally if executionMode attribute has value FutureDated."
+          type: string
+          format: date
+          maxLength: 10
+      required:
+        - amount
+        - currency
+    Bank:
+      description: Klasa zawierająca dane banku uĹźywana w Ĺźądaniach AIS / AIS Bank Data
+        Class
+      properties:
+        bicOrSwift:
+          maxLength: 11
+          description: Numer BIC/SWIFT Banku / BIC/SWIFT number
+          type: string
+        name:
+          maxLength: 70
+          description: Nazwa Banku / Bank's name
+          type: string
+        code:
+          maxLength: 10
+          description: Kod Banku, dla przelewów zagranicznych / Bank's code
+          type: string
+        countryCode:
+          maxLength: 3
+          description: Kod kraju 3166-1 / Country code
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+      type: object
+    TransactionInfoTax:
+      xml:
+        name: TransactionInfoTax
+      description: Klasa informacji danych dla przelewu podatkowego do Urzędu Skarbowego
+        lub Izby Celnej / Tax Transfer
+      properties:
+        payerInfo:
+          $ref: "#/components/schemas/Payor"
+        formCode:
+          maxLength: 7
+          description: Symbol formularza Urzędu Skarbowego lub Izby Celnej / Tax authority
+            form symbol
+          type: string
+        periodId:
+          maxLength: 7
+          description: Numer okresu. Wymagany warunkowo - w zaleĹźności od wartości
+            parametru formCode. / Period number. Required conditionally -
+            depending on formCode parameter value.
+          type: string
+        periodType:
+          maxLength: 7
+          description: Typ okresu. Wymagany warunkowo - w zaleĹźności od wartości parametru
+            formCode. / Period type. Required conditionally - depending on
+            formCode parameter value.
+          type: string
+        year:
+          maximum: 9999
+          format: int32
+          description: Rok okresu. Wymagany warunkowo - w zaleĹźności od wartości parametru
+            formCode. / Period year. Required conditionally - depending on
+            formCode parameter value.
+          type: integer
+        obligationId:
+          maxLength: 40
+          description: Identyfikator zobowiązania, z którego wynika naleĹźność podatku np.
+            decyzja, tytuł wykonawczy, postanowienie / Obligation ID
+          type: string
+      required:
+        - payerInfo
+        - formCode
+      type: object
+    PaymentDomesticRequestBundled:
+      xml:
+        name: PaymentDomesticRequestBundled
+      description: Klasa zlecenia przelewu krajowego w ramach paczki / Domestic Transfer
+        inside bundle Request Class
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPIS"
+        sender:
+          $ref: "#/components/schemas/SenderPISDomestic"
+        transferData:
+          $ref: "#/components/schemas/TransferData"
+        tppTransactionId:
+          maxLength: 64
+          description: ID transakcji nadany przez TPP / Transaction ID (TPP)
+          type: string
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Elixir
+            - ExpressElixir
+            - Sorbnet
+            - BlueCash
+            - Internal
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - sender
+        - transferData
+        - tppTransactionId
+        - deliveryMode
+        - system
+      type: object
+    PaymentEEARequestBundled:
+      xml:
+        name: PaymentEEARequestBundled
+      description: Klasa zlecenia przelewu zagranicznego SEPA w ramach paczki / EEA
+        Transfer inside bundle Request Class
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPISForeign"
+        sender:
+          $ref: "#/components/schemas/SenderPISForeign"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequired"
+        tppTransactionId:
+          maxLength: 64
+          description: ID transakcji nadany przez TPP / Transaction ID (TPP)
+          type: string
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - SEPA
+            - InstantSEPA
+            - Target
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - sender
+        - transferData
+        - tppTransactionId
+        - deliveryMode
+        - system
+      type: object
+    PaymentNonEEARequestBundled:
+      xml:
+        name: PaymentNonEEARequestBundled
+      description: Klasa zlecenia przelewu zagranicznego innego niĹź SEPA w ramach paczki /
+        NonEEA Transfer inside bundle Request Class
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPISForeign"
+        recipientBank:
+          $ref: "#/components/schemas/Bank"
+        sender:
+          $ref: "#/components/schemas/SenderPISForeign"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequired"
+        transferCharges:
+          maxLength: 3
+          description: Klauzula kosztowa / The cost clause
+          type: string
+        tppTransactionId:
+          maxLength: 64
+          description: ID transakcji nadany przez TPP / Transaction ID (TPP)
+          type: string
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - UrgentD1
+            - StandardD2
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Swift
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - recipientBank
+        - sender
+        - transferData
+        - tppTransactionId
+        - deliveryMode
+        - system
+      type: object
+    PaymentTaxRequestBundled:
+      xml:
+        name: PaymentTaxRequestBundled
+      description: Klasa zlecenia przelewu podatkowego w ramach paczki / Tax Transfer
+        inside bundle Request Class
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPISTax"
+        sender:
+          $ref: "#/components/schemas/SenderPISDomestic"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequiredTax"
+        usInfo:
+          $ref: "#/components/schemas/TransactionInfoTax"
+        tppTransactionId:
+          maxLength: 64
+          description: ID transakcji nadany przez TPP / Transaction ID (TPP)
+          type: string
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Elixir
+            - ExpressElixir
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+        executionMode:
+          description: Tryb realizacji płatności. Nadrzędna informacja decydująca o tym w
+            jakim trybie zostanie zrealizowana płatność. / Payment execution
+            mode. The superior information deciding which mode is to be used to
+            execute payment.
+          enum:
+            - Immediate
+            - FutureDated
+          type: string
+      required:
+        - recipient
+        - sender
+        - transferData
+        - tppTransactionId
+        - deliveryMode
+        - system
+      type: object
+    Address:
+      minItems: 1
+      maxItems: 4
+      description: Klasa zawierająca dane adresu pocztowego / Postal address Class
+      type: array
+      items:
+        maxLength: 35
+        type: string
+    NameAddress:
+      description: Klasa zawierająca dane nazwy i adresu w postaci czterech linii danych /
+        Simple name and  postal address Class
+      properties:
+        value:
+          minItems: 1
+          maxItems: 4
+          type: array
+          items:
+            maxLength: 35
+            type: string
+      required:
+        - value
+      type: object
+    RecurringTransferParameters:
+      description: Klasa definiująca parametry płatności cyklicznej / A class defining
+        recurring payment parameters
+      properties:
+        startDate:
+          description: "Data wykonania pierwszej płatności w definiowanym cyklu. Format:
+            YYYY-MM-DD / First payment execution date (of the defined cycle)."
+          type: string
+          format: date
+          maxLength: 10
+        frequency:
+          $ref: "#/components/schemas/RecurringTransferFrequency"
+        endDate:
+          description: "Ostatnia moĹźliwa data wykonania płatności w definiowanym cyklu.
+            Format: YYYY-MM-DD / The last possible payment execution date (of
+            the defined cycle)."
+          type: string
+          format: date
+          maxLength: 10
+        dayOffOffsetType:
+          description: Rodzaj przesunięcia, który naleĹźy zastosować do wykonania przelewu
+            w przypadku, gdy dzień wolny jest planowaną datą przelewu / Type of
+            offset that should be used for transfer execution in case of day off
+            being the planned date of transfer
+          enum:
+            - after
+          type: string
+      required:
+        - startDate
+        - frequency
+        - dayOffOffsetType
+      type: object
+    RecurringTransferFrequency:
+      description: Klasa opisująca parametry częśtotliwości wykonywania płatności
+        cyklicznej / A class defining parameters of the frequency of recurring
+        paymenets
+      properties:
+        periodType:
+          description: Typ jednostki okresu czasu / The type of unit of time period
+          enum:
+            - day
+            - week
+            - month
+          type: string
+        periodValue:
+          minimum: 1
+          description: Wartość jednostki okresu czasu / The value of unit of time period
+          type: integer
+      required:
+        - periodType
+        - periodValue
+      type: object
+    TransferData:
+      properties:
+        currency:
+          maxLength: 3
+          description: Waluta / Currency
+          type: string
+        description:
+          maxLength: 140
+          description: Pole opisujące przelew / Description
+          type: string
+        amount:
+          pattern: ^(0|([1-9][0-9]{0,}))\.\d{2}$
+          description: Kwota przelewu / Amount
+          type: string
+          maxLength: 35
+        executionDate:
+          description: "Data wykonania przelewu. Wymagany pod warunkiem przekazania
+            wartości FutureDated w atrybucie executionMode. Format: YYYY-MM-DD /
+            Date when the transfer is to be executed (YYYY-MM-DD). Required
+            conditionally if executionMode attribute has value FutureDated."
+          type: string
+          format: date
+          maxLength: 10
+      required:
+        - description
+        - amount
+      type: object
+    TransferDataCurrencyRequired:
+      properties:
+        currency:
+          maxLength: 3
+          description: Waluta, domyślnie EUR przelewów zagranicznych / Currency
+          type: string
+        description:
+          maxLength: 140
+          description: Pole opisujące przelew / Description
+          type: string
+        amount:
+          pattern: ^(0|([1-9][0-9]{0,}))\.\d{2}$
+          description: Kwota przelewu / Amount
+          type: string
+          maxLength: 35
+        executionDate:
+          description: "Data wykonania przelewu. Wymagany pod warunkiem przekazania
+            wartości FutureDated w atrybucie executionMode. Format: YYYY-MM-DD /
+            Date when the transfer is to be executed (YYYY-MM-DD). Required
+            conditionally if executionMode attribute has value FutureDated."
+          type: string
+          format: date
+          maxLength: 10
+      required:
+        - currency
+        - description
+        - amount
+    RecurringDomesticPayment:
+      xml:
+        name: RecurringDomesticPayment
+      description: Struktura danych przelewu krajowego, uĹźyta do zdefinowania nowej
+        płatności cyklicznej. / Data structure of domestic payment that is to be
+        used to define new recurring payment.
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPIS"
+        sender:
+          $ref: "#/components/schemas/SenderPISDomestic"
+        transferData:
+          $ref: "#/components/schemas/TransferData"
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Elixir
+            - Internal
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+      required:
+        - recipient
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    RecurringEEAPayment:
+      xml:
+        name: RecurringEEAPayment
+      description: Struktura danych przelewu zagranicznego SEPA, uĹźyta do zdefinowania
+        nowej płatności cyklicznej. / Data structure of EEA payment that is to
+        be used to define new recurring payment.
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPISForeign"
+        sender:
+          $ref: "#/components/schemas/SenderPISForeign"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequired"
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - SEPA
+            - InstantSEPA
+            - Target
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+      required:
+        - recipient
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    RecurringNonEEAPayment:
+      xml:
+        name: RecurringNonEEAPayment
+      description: Struktura danych przelewu zagranicznego innego niĹź SEPA, uĹźyta do
+        zdefinowania nowej płatności cyklicznej. / Data structure of non EEA
+        payment that is to be used to define new recurring payment.
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPISForeign"
+        recipientBank:
+          $ref: "#/components/schemas/Bank"
+        sender:
+          $ref: "#/components/schemas/SenderPISForeign"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequired"
+        transferCharges:
+          maxLength: 3
+          description: Klauzula kosztowa / The cost clause
+          type: string
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - UrgentD1
+            - StandardD2
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Swift
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+      required:
+        - recipient
+        - recipientBank
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    RecurringTaxPayment:
+      xml:
+        name: RecurringTaxPayment
+      description: Struktura danych przelewu do urzędu podatkowego, uĹźyta do zdefinowania
+        nowej płatności cyklicznej. / Data structure of tax payment that is to
+        be used to define new recurring payment.
+      properties:
+        recipient:
+          $ref: "#/components/schemas/RecipientPISTax"
+        sender:
+          $ref: "#/components/schemas/SenderPISDomestic"
+        transferData:
+          $ref: "#/components/schemas/TransferDataCurrencyRequiredTax"
+        usInfo:
+          $ref: "#/components/schemas/TransactionInfoTax"
+        deliveryMode:
+          description: Tryb pilności / Urgency mode
+          enum:
+            - ExpressD0
+            - StandardD1
+          type: string
+        system:
+          description: Droga jaką przelew ma być rozliczony / The way the transfer should
+            be settled
+          enum:
+            - Elixir
+            - ExpressElixir
+          type: string
+        hold:
+          description: Czy załoĹźyć blokadę (w przypadku np. zlecenia przelewu w dniu
+            wolnym) / Indicates if payment should be holded
+          type: boolean
+      required:
+        - recipient
+        - sender
+        - transferData
+        - deliveryMode
+        - system
+      type: object
+    AccountForeign:
+      maxLength: 34
+      description: Numer konta, format dla przelewów zagranicznych
+      type: string
+    TransferDataBaseTax:
+      description: Bazowa klasa dla TransferData / TransferData Base Class
+      properties:
+        amount:
+          pattern: ^(0|([1-9][0-9]{0,}))\.\d{2}$
+          description: Kwota przelewu / Amount
+          type: string
+          maxLength: 35
+        executionDate:
+          description: "Data wykonania przelewu. Wymagany pod warunkiem przekazania
+            wartości FutureDated w atrybucie executionMode. Format: YYYY-MM-DD /
+            Date when the transfer is to be executed (YYYY-MM-DD). Required
+            conditionally if executionMode attribute has value FutureDated."
+          type: string
+          format: date
+      type: object
+    TPPContacts:
+      properties:
+        firstName:
+          maxLength: 64
+          description: Imię / First name
+          type: string
+        lastName:
+          maxLength: 64
+          description: Nazwisko / Last name
+          type: string
+        phoneNumber:
+          maxLength: 32
+          description: Numer telefonu / Telephone number
+          type: string
+          pattern: ^[+]?[0-9 -]+[0-9]+$
+        email:
+          maxLength: 256
+          description: Adres email / Email address
+          type: string
+          format: email
+      required:
+        - firstName
+        - lastName
+        - phoneNumber
+        - email
+      type: object
+    Payor:
+      xml:
+        name: Payor
+      description: Klasa informacji o płatniku do US / Tax Payor Information Class
+      properties:
+        payorId:
+          maxLength: 20
+          description: Identyfikator płatnika / Payor ID
+          type: string
+        payorIdType:
+          description: |-
+            Typ identyfikatora płatnika / Payor ID type
+            * `N` - NIP
+            * `P` - Pesel
+            * `R` - Regon
+            * `1` - Dowód osobisty
+            * `2` - Paszport
+            * `3` - Inny
+          enum:
+            - N
+            - P
+            - R
+            - "1"
+            - "2"
+            - "3"
+          type: string
+      required:
+        - payorId
+        - payorIdType
+      type: object
